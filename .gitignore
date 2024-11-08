@@ -1,2 +1,5 @@
-.DS_Store
 node_modules
+bdr_env
+.bdr_env
+__pycache__
+build

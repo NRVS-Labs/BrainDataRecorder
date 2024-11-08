@@ -1,26 +1,39 @@
 {
-  "name": "braindatarecorder",
+  "name": "my-app",
+  "productName": "my-app",
   "version": "1.0.0",
-  "description": "A simple application for recording brain data",
-  "main": "main.js",
+  "description": "My Electron application description",
+  "main": "src/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron .",
-    "watch": "nodemon --exec electron ."
+    "start": "npm-run-all --parallel python_venv frontend backend electronf",
+    "python_venv": "cd backend && cd bdr_env && cd Scripts && activate",
+    "electronf": "electron-forge start",
+    "frontend": "cd frontend && npm start",
+    "backend": "cd backend && cd bdr_env && cd Scripts && python ../../app.py",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NRVS-Labs/BrainDataRecorder.git"
-  },
-  "author": "LeonardoFerrisi",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/NRVS-Labs/BrainDataRecorder/issues"
-  },
-  "homepage": "https://github.com/NRVS-Labs/BrainDataRecorder#readme",
   "devDependencies": {
-    "electron": "^9.0.0",
-    "nodemon": "^2.0.0"
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "31.3.1"
   },
-  "dependencies": {}
+  "keywords": [],
+  "author": {
+    "name": "LeonardoFerrisi",
+    "email": "biggestresurgence1492@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1",
+    "npm-run-all": "^4.1.5"
+  }
 }
