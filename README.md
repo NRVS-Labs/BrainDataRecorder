@@ -45,7 +45,7 @@ python -m venv .bdr_env
 > **Note** If on Mac/Linux, activate the .bdr_env with: 
     `source .bdr_env/bin/activate`
 
-*Once you have activated the environment for python, install all required packages located in `BrainDataRecorders//backend//requirements.txt`
+*Once you have activated the environment for python, install all required packages located in* `BrainDataRecorders//backend//requirements.txt`
 ```bash
 python -m pip install -r requirements.txt
 ```
