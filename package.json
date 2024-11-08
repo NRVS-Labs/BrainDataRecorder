@@ -1,0 +1,26 @@
+{
+  "name": "braindatarecorder",
+  "version": "1.0.0",
+  "description": "A simple application for recording brain data",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "watch": "nodemon --exec electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NRVS-Labs/BrainDataRecorder.git"
+  },
+  "author": "LeonardoFerrisi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NRVS-Labs/BrainDataRecorder/issues"
+  },
+  "homepage": "https://github.com/NRVS-Labs/BrainDataRecorder#readme",
+  "devDependencies": {
+    "electron": "^9.0.0",
+    "nodemon": "^2.0.0"
+  },
+  "dependencies": {}
+}
