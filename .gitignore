@@ -3,3 +3,4 @@ bdr_env
 .bdr_env
 __pycache__
 build
+save_data/*
