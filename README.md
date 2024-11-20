@@ -79,7 +79,7 @@ If you are on a Mac or Linux, you will need to change the following in `BrainDat
 to 
 
 ```json 
-"backend": "cd backend && cd bdr_env && cd bin && python ../../app.py",
+"backend": "cd backend && cd .bdr_env && cd bin && python ../../app.py",
 ```
 
 5. Navigate to the root directory (**BrainDataRecorder//**), and run:
