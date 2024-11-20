@@ -2,6 +2,8 @@
 
 ![BDR logo](logo.png)
 
+A simple application for recording and saving recorded data from biosensing devices compatible with [Brainflow](https://brainflow.org/)
+
 #
 
 ## Maintainer Info
