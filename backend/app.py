@@ -21,7 +21,8 @@ def get_serial_devices():
     global CURRENT_BOARD
     ports = serial.tools.list_ports.comports()
     devices = [{"id": port.device, "label": port.description} for port in ports]
-    devices = [{"id": "-1", "label":"Synthetic"}]
+    devices = [{"id": "-1", "label":"Synthetic"}, {"id": "1", "label":"OpenBCI 8Channel"}, {"id": "2", "label":"OpenBCI 16Channel"}, 
+               {"id": "21", "label":"Muse2016"}, {"id": "22", "label":"Muse2"}]
     return jsonify(devices)
 
 @app.route('/start-device', methods=['POST'])
