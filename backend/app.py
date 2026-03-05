@@ -7,11 +7,16 @@ from streaming import (
 )
 import traceback
 import os
+import sys
 
 app = Flask(__name__)
 CORS(app)
 
-filedir = os.path.dirname(os.path.realpath(__file__))
+if getattr(sys, 'frozen', False):
+    # Running as a PyInstaller frozen executable
+    filedir = os.path.dirname(sys.executable)
+else:
+    filedir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.dirname(filedir)
 save_dir = os.path.join(root_dir, 'save_data')
 
@@ -94,8 +99,8 @@ def connect_device():
 
         CURRENT_BOARD.setup(
             board_id=board_id,
-            serial_port=serial_port,
-            mac_address=mac_address,
+            serial_port=serial_port, # type: ignore
+            mac_address=mac_address, # type: ignore
         )
 
         info = CURRENT_BOARD.get_board_info()
@@ -141,7 +146,7 @@ def start_device_stream():
             body = request.get_json() or {}
             board_id = int(body.get('board_id', -1))
             serial_port = body.get('serial_port', None)
-            CURRENT_BOARD.setup(board_id=board_id, serial_port=serial_port)
+            CURRENT_BOARD.setup(board_id=board_id, serial_port=serial_port) # type: ignore
 
         CURRENT_BOARD.start()
         local_update_banner_message(
@@ -305,4 +310,4 @@ def local_update_banner_message(message: str) -> None:
 
 if __name__ == '__main__':
     os.makedirs(save_dir, exist_ok=True)
-    app.run(port=5000, debug=True)
+    app.run(port=5000, debug=False, use_reloader=False)

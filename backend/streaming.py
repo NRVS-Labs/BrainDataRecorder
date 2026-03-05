@@ -11,23 +11,33 @@ import time
 # Map board IDs to human-readable names
 BOARD_ID_MAP = {
     -1: 'Synthetic',
-    0:  'Cyton',
-    1:  'OpenBCI 8ch (Ganglion)',
-    2:  'OpenBCI 16ch (CytonDaisy)',
-    21: 'Muse 2016',
-    22: 'Muse 2',
-    38: 'Muse S',
-    39: 'BrainBit',
-    41: 'Notion 1',
-    42: 'Notion 2',
-    44: 'Crown',
+    BoardIds.CYTON_BOARD:  'OpenBCI 8ch (Cyton)',
+    BoardIds.GANGLION_BOARD:  'OpenBCI 4ch (Ganglion)',
+    BoardIds.CYTON_DAISY_BOARD:  'OpenBCI 16ch (CytonDaisy)',
+    BoardIds.MUSE_2016_BLED_BOARD: 'Muse 2016 (BLED 112)',
+    BoardIds.MUSE_2016_BOARD: 'Muse 2016',
+    BoardIds.MUSE_2_BLED_BOARD: 'Muse 2 (BLED 112)',
+    BoardIds.MUSE_2_BOARD: 'Muse 2',
+    BoardIds.MUSE_S_BLED_BOARD: 'Muse S (BLED 112)',
+    BoardIds.MUSE_S_BOARD: 'Muse S',
 }
 
 # Boards that require a serial port
-SERIAL_PORT_BOARDS = {0, 1, 2}
+SERIAL_PORT_BOARDS = (
+    BoardIds.CYTON_BOARD, 
+    BoardIds.GANGLION_BOARD, 
+    BoardIds.CYTON_DAISY_BOARD,
+    BoardIds.MUSE_2016_BLED_BOARD,
+    BoardIds.MUSE_2_BLED_BOARD,
+    BoardIds.MUSE_S_BLED_BOARD
+)
 
 # Boards that require BLE/Bluetooth (no serial port needed)
-BLE_BOARDS = {21, 22, 38, 39, 41, 42, 44}
+BLE_BOARDS = (
+    BoardIds.MUSE_2016_BOARD,
+    BoardIds.MUSE_2_BOARD,
+    BoardIds.MUSE_S_BOARD
+)
 
 
 class UDPStreamer:
@@ -72,7 +82,7 @@ class UDPStreamer:
                                 "board_name": board.get_board_type(),
                                 "eeg_channels": eeg_channels,
                                 "num_samples": data.shape[1], # type: ignore
-                                "timestamps": data[timestamp_channel].tolist()[-10:],
+                                "timestamps": data[timestamp_channel].tolist()[-10:], # type: ignore
                                 "eeg_data": {
                                     str(ch): data[ch].tolist()[-10:] # type: ignore
                                     for ch in eeg_channels
@@ -168,7 +178,7 @@ class BrainBoard:
         if self.isStreaming:
             raise RuntimeError("Board is already streaming.")
 
-        self.board.start_stream()
+        self.board.start_stream() # type: ignore
         self.isStreaming = True
         print(f"[BrainBoard] Started streaming")
 
@@ -181,8 +191,8 @@ class BrainBoard:
         if self.udp_streamer.is_streaming:
             self.udp_streamer.stop()
 
-        self.board.stop_stream()
-        self.data = self.board.get_board_data()
+        self.board.stop_stream() # type: ignore
+        self.data = self.board.get_board_data() # type: ignore
         self.isStreaming = False
         sample_count = self.data.shape[1] if self.data is not None else 0
         print(f"[BrainBoard] Stopped streaming. Collected {sample_count} samples.")
@@ -193,7 +203,7 @@ class BrainBoard:
     def get_id(self) -> int:
         return self._board_id if self._board_id is not None else -1
 
-    def get_board_type(self, board_id: int = None) -> str:
+    def get_board_type(self, board_id: int = None) -> str: # type: ignore
         bid = board_id if board_id is not None else self._board_id
         return BOARD_ID_MAP.get(bid, f'Board_{bid}')
 
@@ -245,7 +255,7 @@ class BrainBoard:
             if self.udp_streamer.is_streaming:
                 self.udp_streamer.stop()
             if self.isStreaming:
-                self.board.stop_stream()
+                self.board.stop_stream() # type: ignore
                 self.isStreaming = False
             if self.board is not None:
                 self.board.release_session()
@@ -269,7 +279,7 @@ class BrainBoard:
         }
 
 
-def compose_response(message: str, data: dict = None, success: bool = True) -> dict:
+def compose_response(message: str, data: dict = None, success: bool = True) -> dict: # type: ignore
     """Standardized API response format."""
     response = {"success": success, "message": message}
     if data is not None:

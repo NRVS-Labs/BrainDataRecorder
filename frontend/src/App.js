@@ -48,6 +48,7 @@ function App() {
         console.error('Error fetching devices:', err);
         showBanner('Could not reach backend. Is the Flask server running?', 'error');
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ---- Timer ----
@@ -67,6 +68,7 @@ function App() {
     if (!isRecording) return;
     const id = setInterval(fetchBannerMessage, 5000);
     return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRecording]);
 
   // ---- Helpers ----
