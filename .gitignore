@@ -1,6 +1,7 @@
 node_modules
 bdr_env
 .bdr_env
+.venv
 __pycache__
 build
 save_data/*

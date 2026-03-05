@@ -6,10 +6,10 @@
   "main": "src/main.js",
   "scripts": {
     "start": "npm-run-all --parallel python_venv frontend backend electronf",
-    "python_venv": "cd backend && cd bdr_env && cd Scripts && activate",
+    "python_venv": "cd backend && cd .venv && cd Scripts && activate",
     "electronf": "electron-forge start",
     "frontend": "cd frontend && npm start",
-    "backend": "cd backend && cd bdr_env && cd Scripts && python ../../app.py",
+    "backend": "cd backend && cd .venv && cd Scripts && python ../../app.py",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
