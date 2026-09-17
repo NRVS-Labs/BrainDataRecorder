@@ -92,18 +92,21 @@ function App() {
   };
 
   // ---- Device selection ----
+  // The board dropdown only ever lists actual BrainFlow board types (synthetic +
+  // named boards). Auto-detected serial ports are never board types on their own —
+  // BrainFlow's serial protocol differs per board, so a bare port can't tell us
+  // whether it's a Cyton, Ganglion, etc. They're offered separately as suggestions
+  // for the serial-port field instead (see `detectedPorts` / the <datalist> below).
+  const boardOptions = devices.filter(d => d.type !== 'serial_port');
+  const detectedPorts = devices.filter(d => d.type === 'serial_port');
+
   const handleDeviceChange = (e) => {
     const deviceId = e.target.value;
     setSelectedDeviceId(deviceId);
 
-    const device = devices.find(d => d.id === deviceId);
+    const device = boardOptions.find(d => d.id === deviceId);
     if (device) {
       setRequiresSerial(device.requires_serial || false);
-      if (device.serial_port) {
-        setSerialPort(device.serial_port);
-      } else {
-        setSerialPort('');
-      }
     }
 
     // Disconnect if currently connected to a different device
@@ -118,19 +121,14 @@ function App() {
       showBanner('Please select a device first.', 'error');
       return;
     }
+    if (requiresSerial && !serialPort) {
+      showBanner('This board needs a serial port (e.g. COM3).', 'error');
+      return;
+    }
     setIsLoading(true);
     try {
-      let boardId;
-      let port = null;
-
-      if (selectedDeviceId.startsWith('serial:')) {
-        // A raw serial port was selected — default to Cyton (board 0)
-        boardId = 0;
-        port = selectedDeviceId.replace('serial:', '');
-      } else {
-        boardId = parseInt(selectedDeviceId, 10);
-        port = serialPort || null;
-      }
+      const boardId = parseInt(selectedDeviceId, 10);
+      const port = serialPort || null;
 
       const res = await axios.post(`${API}/connect-device`, {
         board_id: boardId,
@@ -302,23 +300,33 @@ function App() {
           disabled={isRecording}
         >
           <option value="" disabled>Select a device</option>
-          {devices.map(device => (
+          {boardOptions.map(device => (
             <option key={device.id} value={device.id}>
               {device.label}
             </option>
           ))}
         </select>
 
-        {/* Serial port input for boards that need it */}
+        {/* Serial port input for boards that need it. Detected ports are offered
+            as autocomplete suggestions via the datalist, but the user picks the
+            actual board type above — we never guess it from the port. */}
         {requiresSerial && (
-          <input
-            className="serial-input"
-            type="text"
-            placeholder="Serial port (e.g. COM3)"
-            value={serialPort}
-            onChange={e => setSerialPort(e.target.value)}
-            disabled={isConnected}
-          />
+          <>
+            <input
+              className="serial-input"
+              type="text"
+              list="detected-ports"
+              placeholder="Serial port (e.g. COM3)"
+              value={serialPort}
+              onChange={e => setSerialPort(e.target.value)}
+              disabled={isConnected}
+            />
+            <datalist id="detected-ports">
+              {detectedPorts.map(p => (
+                <option key={p.id} value={p.serial_port} label={p.label} />
+              ))}
+            </datalist>
+          </>
         )}
 
         {/* Connect / Disconnect button */}
